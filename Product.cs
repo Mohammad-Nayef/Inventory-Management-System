@@ -7,8 +7,8 @@
     public Product(string name, decimal price, int quantity) 
     {
         this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+        Price = price;
+        Quantity = quantity;
     }
 
     public string Name
@@ -23,9 +23,9 @@
         set 
         {
             if (value < 0)
-                Console.WriteLine("Please try again and enter a non-negative integer.");
+                Console.WriteLine("Please try again and enter a positive price.");
             else 
-                price = value; 
+                price = value;
         }
     }
 
@@ -35,9 +35,14 @@
         set 
         {
             if (value < 0)
-                Console.WriteLine("Please try again and enter a non-negative integer.");
+                Console.WriteLine("Please try again and enter a positive quantity.");
             else
                 quantity = value; 
         }
+    }
+
+    public static bool AreValid(decimal price, int quantity)
+    {
+        return price >= 0 && quantity >= 0;
     }
 }
