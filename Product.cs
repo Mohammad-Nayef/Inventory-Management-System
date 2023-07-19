@@ -2,7 +2,7 @@
 {
     private string name;
     private decimal price;
-    private int quantity;
+    private int quantity; 
 
     public Product(string name, decimal price, int quantity) 
     {
