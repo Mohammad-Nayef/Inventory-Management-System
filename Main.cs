@@ -10,6 +10,7 @@ while (true)
     Console.WriteLine("2. View all products.");
     Console.WriteLine("3. Edit a product.");
     Console.WriteLine("4. Delete a product.");
+    Console.WriteLine("5. Search for a product.");
     Console.WriteLine("0. Exit.\n");
     Console.Write("Choose a valid option: ");
     option = int.Parse(Console.ReadLine());
@@ -34,15 +35,29 @@ while (true)
             break;
 
         case 3:
-            Console.Write("Name of the product to edit it: ");
+            Console.Write("Name of a product to edit it: ");
             name = Console.ReadLine();
             Edit(name);
             break;
 
         case 4:
-            Console.Write("Name of the product to delete it: ");
+            Console.Write("Name of a product to delete it: ");
             name = Console.ReadLine();
             inventory.Delete(name);
+            break;
+
+        case 5:
+            Console.Write("Name of a product to search for it: ");
+            name = Console.ReadLine();
+            int index = inventory.IndexOf(name);
+            if (index == -1)
+                Console.WriteLine($"{name} doesn't exist.");
+
+            else
+            {
+                Console.WriteLine();
+                inventory.Print(index);
+            }
             break;
 
         default:
@@ -64,7 +79,8 @@ void Edit(string name)
         return;
     }
 
-    Console.WriteLine("\nThe current data: ");
+    Console.Clear();
+    Console.WriteLine("The current data: ");
     inventory.Print(index);
 
     Console.WriteLine("\n1. Edit the name.");

@@ -29,7 +29,7 @@
             Console.WriteLine($"Quantity: {products[index].Quantity}");
         }
 
-        // Print all of the existing products
+        // Print all of the existing products (default parameter)
         else
         {
             for (int i = 0; i < products.Count; i++)
