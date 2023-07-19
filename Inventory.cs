@@ -49,7 +49,7 @@
             case EditOptions.Name:
                 products[index].Name = (string)newValue;
                 break;
-            case EditOptions.Price:
+            case EditOptions.Price: 
                 products[index].Price = (decimal)newValue; 
                 break;
             case EditOptions.Quantity:
@@ -58,6 +58,16 @@
             default:
                 throw new Exception("Invalid edit option.");
         }
+    }
+
+    public void Delete(string neededName)
+    {
+        int index = IndexOf(neededName);
+        if (index == -1)
+            Console.WriteLine($"{neededName} doesn't exist.");
+
+        else
+            products.RemoveAt(index);
     }
 
     public int IndexOf(string name)

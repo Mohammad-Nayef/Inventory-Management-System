@@ -9,6 +9,7 @@ while (true)
     Console.WriteLine("1. Add a product.");
     Console.WriteLine("2. View all products.");
     Console.WriteLine("3. Edit a product.");
+    Console.WriteLine("4. Delete a product.");
     Console.WriteLine("0. Exit.\n");
     Console.Write("Choose a valid option: ");
     option = int.Parse(Console.ReadLine());
@@ -38,6 +39,12 @@ while (true)
             Edit(name);
             break;
 
+        case 4:
+            Console.Write("Name of the product to delete it: ");
+            name = Console.ReadLine();
+            inventory.Delete(name);
+            break;
+
         default:
             Console.WriteLine("Please enter a valid option.");
             break;
@@ -63,7 +70,7 @@ void Edit(string name)
     Console.WriteLine("\n1. Edit the name.");
     Console.WriteLine("2. Edit the price.");
     Console.WriteLine("3. Edit the quantity.");
-    Console.WriteLine("0. Done.\n");
+    Console.WriteLine("0. Cancel.\n");
     Console.Write("Choose a valid option: ");
 
     int option;
