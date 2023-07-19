@@ -10,4 +10,15 @@
             products.Add(newProduct);
         }
     }
+
+    public void print()
+    {
+        for (int i = 1; i < products.Count; i++)
+        {
+            Console.Write($"Product #{i} :\n");
+            Console.WriteLine($"\tName: {products[i].Name}");
+            Console.WriteLine($"\tPrice: {products[i].Price}");
+            Console.WriteLine($"\tQuantity: {products[i].Quantity}\n");
+        }
+    }
 }
