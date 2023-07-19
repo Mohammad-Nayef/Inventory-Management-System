@@ -11,11 +11,11 @@
         }
     }
 
-    public void print()
+    public void Print()
     {
-        for (int i = 1; i < products.Count; i++)
+        for (int i = 0; i < products.Count; i++)
         {
-            Console.Write($"Product #{i} :\n");
+            Console.Write($"Product #{i + 1}:\n");
             Console.WriteLine($"\tName: {products[i].Name}");
             Console.WriteLine($"\tPrice: {products[i].Price}");
             Console.WriteLine($"\tQuantity: {products[i].Quantity}\n");
