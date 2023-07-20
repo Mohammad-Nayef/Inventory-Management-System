@@ -1,18 +1,14 @@
-﻿public class Product
+﻿using System.ComponentModel;
+
+public class Product
 {
-    private string name;
     private decimal price;
-    private int quantity; 
+    private int quantity;
+    public string Name { get; set; }
 
     public Product(string name, decimal price, int quantity) 
     {
-        (this.name, Price, Quantity) = (name, Price, quantity);
-    }
-
-    public string Name
-    {
-        get { return name; }
-        set { name = value; }
+        (Name, Price, Quantity) = (name, price, quantity);
     }
 
     public decimal Price

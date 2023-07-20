@@ -80,7 +80,7 @@ void Edit(string name)
     }
 
     Console.Clear();
-    Console.WriteLine("The current data: ");
+    Console.WriteLine($"The current data of {name}: ");
     inventory.Print(index);
 
     Console.WriteLine("\n1. Edit the name.");
