@@ -6,9 +6,7 @@
 
     public Product(string name, decimal price, int quantity) 
     {
-        this.name = name;
-        Price = price;
-        Quantity = quantity;
+        (this.name, Price, Quantity) = (name, Price, quantity);
     }
 
     public string Name
