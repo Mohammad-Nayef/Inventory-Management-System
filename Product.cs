@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-
-public class Product
+﻿public class Product
 {
-    private decimal price;
-    private int quantity;
+    private decimal _price;
+    private int _quantity;
     public string Name { get; set; }
 
     public Product(string name, decimal price, int quantity) 
@@ -13,25 +11,25 @@ public class Product
 
     public decimal Price
     {
-        get { return price; }
+        get { return _price; }
         set 
         {
             if (value < 0)
                 Console.WriteLine("Please try again and enter a positive price.");
             else 
-                price = value;
+                _price = value;
         }
     }
 
     public int Quantity
     {
-        get { return quantity; }
+        get { return _quantity; }
         set 
         {
             if (value < 0)
                 Console.WriteLine("Please try again and enter a positive quantity.");
             else
-                quantity = value; 
+                _quantity = value; 
         }
     }
 
