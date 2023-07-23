@@ -4,7 +4,7 @@
 
     public void Add(string name, decimal price, int quantity)
     {
-        Product newProduct = new(name, price, quantity);
+        var newProduct = new Product(name, price, quantity);
         if (Product.AreValid(price, quantity)) 
         {
             products.Add(newProduct);
@@ -29,40 +29,40 @@
             Console.WriteLine($"Quantity: {products[index].Quantity}");
         }
 
-        // Print all of the existing products (default parameter)
+        // Print all of the existing products (without passing an argument)
         else
         {
-            for (int i = 0; i < products.Count; i++)
+            for (var i = 0; i < products.Count; i++)
             {
                 Console.Write($"Product #{i + 1}:\n");
                 Console.WriteLine($"\tName: {products[i].Name}");
                 Console.WriteLine($"\tPrice: {products[i].Price}");
                 Console.WriteLine($"\tQuantity: {products[i].Quantity}\n");
-            } 
+            }
         }
     }
 
-    public void Edit(EditOptions editOption, int index, object newValue)
+    public void Edit(int index, object newValue)
     {
-        switch(editOption)
-        {
-            case EditOptions.Name:
-                products[index].Name = (string)newValue;
-                break;
-            case EditOptions.Price: 
-                products[index].Price = (decimal)newValue; 
-                break;
-            case EditOptions.Quantity:
-                products[index].Quantity = (int)newValue;
-                break;
-            default:
-                throw new Exception("Invalid edit option.");
-        }
+        // The name is edited
+        if (newValue.GetType() == typeof(string))
+            products[index].Name = (string)newValue;
+
+        // The price is edited
+        else if (newValue.GetType() == typeof(decimal))
+            products[index].Price = (decimal)newValue;
+        
+        // The quantity is edited
+        else if (newValue.GetType() == typeof(int))
+            products[index].Quantity = (int)newValue;
+
+        else
+            throw new Exception("The edited value has an invalid data type.");
     }
 
     public void Delete(string neededName)
     {
-        int index = IndexOf(neededName);
+        var index = IndexOf(neededName);
         if (index == -1)
             Console.WriteLine($"{neededName} doesn't exist.");
 
@@ -72,7 +72,7 @@
 
     public int IndexOf(string name)
     {
-        for (int i = 0; i < products.Count; i++)
+        for (var i = 0; i < products.Count; i++)
         {
             if (products[i].Name.ToLower() == name.ToLower())
                 return i;
