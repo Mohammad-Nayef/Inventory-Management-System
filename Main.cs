@@ -1,18 +1,11 @@
-﻿Inventory inventory = new();
+﻿var inventory = new Inventory();
 string name;
 decimal price; 
 int quantity, option;
 
 while (true)
 {
-    Console.WriteLine("Inventory Management System\n");
-    Console.WriteLine("1. Add a product.");
-    Console.WriteLine("2. View all products.");
-    Console.WriteLine("3. Edit a product.");
-    Console.WriteLine("4. Delete a product.");
-    Console.WriteLine("5. Search for a product.");
-    Console.WriteLine("0. Exit.\n");
-    Console.Write("Choose a valid option: ");
+    PrintMainMenu();
     option = int.Parse(Console.ReadLine());
 
     switch (option)
@@ -49,7 +42,7 @@ while (true)
         case 5:
             Console.Write("Name of a product to search for it: ");
             name = Console.ReadLine();
-            int index = inventory.IndexOf(name);
+            var index = inventory.IndexOf(name);
             if (index == -1)
                 Console.WriteLine($"{name} doesn't exist.");
 
@@ -72,7 +65,7 @@ while (true)
 
 void Edit(string name)
 {
-    int index = inventory.IndexOf(name);
+    var index = inventory.IndexOf(name);
     if (index == -1)
     {
         Console.WriteLine($"{name} doesn't exist.");
@@ -83,11 +76,7 @@ void Edit(string name)
     Console.WriteLine($"The current data of {name}: ");
     inventory.Print(index);
 
-    Console.WriteLine("\n1. Edit the name.");
-    Console.WriteLine("2. Edit the price.");
-    Console.WriteLine("3. Edit the quantity.");
-    Console.WriteLine("0. Cancel.\n");
-    Console.Write("Choose a valid option: ");
+    PrintEditMenu();
 
     int option;
     option = int.Parse(Console.ReadLine());
@@ -98,24 +87,45 @@ void Edit(string name)
 
         case 1:
             Console.Write("Enter the new name: ");
-            string newName = Console.ReadLine();
-            inventory.Edit(EditOptions.Name, index, newName);
+            var newName = Console.ReadLine();
+            inventory.Edit(index, newName);
             break;
 
         case 2:
             Console.Write("Enter the new price: ");
-            decimal newPrice = decimal.Parse(Console.ReadLine());
-            inventory.Edit(EditOptions.Price, index, newPrice);
+            var newPrice = decimal.Parse(Console.ReadLine());
+            inventory.Edit(index, newPrice);
             break;
 
         case 3:
             Console.Write("Enter the new quantity: ");
-            int newQuantity = int.Parse(Console.ReadLine());
-            inventory.Edit(EditOptions.Quantity, index, newQuantity);
+            var newQuantity = int.Parse(Console.ReadLine());
+            inventory.Edit(index, newQuantity);
             break;
 
         default:
             Console.WriteLine("Please use a valid edit option.");
             break;
     }
+}
+
+static void PrintMainMenu()
+{
+    Console.WriteLine("Inventory Management System\n");
+    Console.WriteLine("1. Add a product.");
+    Console.WriteLine("2. View all products.");
+    Console.WriteLine("3. Edit a product.");
+    Console.WriteLine("4. Delete a product.");
+    Console.WriteLine("5. Search for a product.");
+    Console.WriteLine("0. Exit.\n");
+    Console.Write("Choose a valid option: ");
+}
+
+static void PrintEditMenu()
+{
+    Console.WriteLine("\n1. Edit the name.");
+    Console.WriteLine("2. Edit the price.");
+    Console.WriteLine("3. Edit the quantity.");
+    Console.WriteLine("0. Cancel.\n");
+    Console.Write("Choose a valid option: ");
 }
