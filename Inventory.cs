@@ -1,82 +1,70 @@
-﻿public class Inventory
-{
-    private List<Product> products = new();
+﻿using System.Text;
 
-    public void Add(string name, decimal price, int quantity)
+public class Inventory
+{
+    private List<Product> _products = new();
+
+    public void AddProduct(Product newProduct)
     {
-        var newProduct = new Product(name, price, quantity);
-        if (Product.AreValid(price, quantity)) 
-        {
-            products.Add(newProduct);
-        }
+        _products.Add(newProduct);
     }
 
     public bool IsEmpty()
     {
-        return products.Count == 0;
+        return _products.Count == 0;
     }
 
-    public void Print(int index = -1)
+    public string PrintAllProducts()
     {
         if (IsEmpty())
-            Console.WriteLine("There are no products.");
+            return "There are no products.";
 
-        // Print a specific product
-        else if (index != -1)
+        var allProducts = new StringBuilder();
+
+        for (var i = 0; i < _products.Count; i++)
         {
-            Console.WriteLine($"Name: {products[index].Name}");
-            Console.WriteLine($"Price: {products[index].Price}");
-            Console.WriteLine($"Quantity: {products[index].Quantity}");
+            allProducts.Append($"""
+                Product #{i + 1}:
+                {_products[i].ToString()}
+                
+
+                """);
         }
 
-        // Print all of the existing products (without passing an argument)
-        else
+        return allProducts.ToString();
+    }
+
+    public void EditProductName(Product product, string? newName)
+    {
+        product.Name = newName;
+    }
+
+    public void EditProductPrice(Product product, decimal newPrice)
+    {
+        product.Price = newPrice;
+    }
+
+    public void EditProductQuantity(Product product, int newQuantity)
+    {
+        product.Quantity = newQuantity;
+    }
+
+    public void DeleteProduct(Product product)
+    {
+        _products.Remove(product);
+    }
+
+    /// <summary>
+    /// Returns an object of the product or null (if it's not found).
+    /// </summary>
+    /// <returns>Product?</returns>
+    public Product? FindProduct(string? productName)
+    {
+        foreach (var product in _products)
         {
-            for (var i = 0; i < products.Count; i++)
-            {
-                Console.Write($"Product #{i + 1}:\n");
-                Console.WriteLine($"\tName: {products[i].Name}");
-                Console.WriteLine($"\tPrice: {products[i].Price}");
-                Console.WriteLine($"\tQuantity: {products[i].Quantity}\n");
-            }
+            if (product.Name.Equals(productName, StringComparison.InvariantCultureIgnoreCase))
+                return product;
         }
-    }
-
-    public void Edit(int index, object newValue)
-    {
-        // The name is edited
-        if (newValue.GetType() == typeof(string))
-            products[index].Name = (string)newValue;
-
-        // The price is edited
-        else if (newValue.GetType() == typeof(decimal))
-            products[index].Price = (decimal)newValue;
-        
-        // The quantity is edited
-        else if (newValue.GetType() == typeof(int))
-            products[index].Quantity = (int)newValue;
-
-        else
-            throw new Exception("The edited value has an invalid data type.");
-    }
-
-    public void Delete(string neededName)
-    {
-        var index = IndexOf(neededName);
-        if (index == -1)
-            Console.WriteLine($"{neededName} doesn't exist.");
-
-        else
-            products.RemoveAt(index);
-    }
-
-    public int IndexOf(string name)
-    {
-        for (var i = 0; i < products.Count; i++)
-        {
-            if (products[i].Name.ToLower() == name.ToLower())
-                return i;
-        }
-        return -1;
+        return null;
     }
 }

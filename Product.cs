@@ -1,40 +1,30 @@
 ﻿public class Product
 {
-    private decimal _price;
-    private int _quantity;
-    public string Name { get; set; }
+    public string? Name { get; set; }
+    public decimal Price { get; set; }
+    public int Quantity { get; set; }
 
-    public Product(string name, decimal price, int quantity) 
+    public Product(string? name, decimal price, int quantity) 
     {
         (Name, Price, Quantity) = (name, price, quantity);
     }
 
-    public decimal Price
+    public override string ToString()
     {
-        get { return _price; }
-        set 
-        {
-            if (value < 0)
-                Console.WriteLine("Please try again and enter a positive price.");
-            else 
-                _price = value;
-        }
+        return $"""
+            Name: {Name}
+            Price: {Price}
+            Quantity: {Quantity}
+            """;
     }
 
-    public int Quantity
+    public static bool ValidPrice(decimal productPrice)
     {
-        get { return _quantity; }
-        set 
-        {
-            if (value < 0)
-                Console.WriteLine("Please try again and enter a positive quantity.");
-            else
-                _quantity = value; 
-        }
+        return productPrice >= 0;
     }
-
-    public static bool AreValid(decimal price, int quantity)
+    
+    public static bool ValidQuantity(int productQuantity)
     {
-        return price >= 0 && quantity >= 0;
+        return productQuantity >= 0;
     }
 }

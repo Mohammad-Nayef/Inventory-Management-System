@@ -1,56 +1,93 @@
 ﻿var inventory = new Inventory();
-string name;
-decimal price; 
-int quantity, option;
+string? productName;
+decimal productPrice; 
+int productQuantity, menuOption;
 
 while (true)
 {
     PrintMainMenu();
-    option = int.Parse(Console.ReadLine());
+    if (!int.TryParse(Console.ReadLine(), out menuOption))
+    {
+        Console.WriteLine("Invalid option.");
+        continue;
+    }
 
-    switch (option)
+    switch (menuOption)
     {
         case 0:
             return 0;
 
         case 1:
             Console.Write("Name of the product: ");
-            name = Console.ReadLine();
+            productName = Console.ReadLine();
+
             Console.Write("Price of the product: ");
-            price = decimal.Parse(Console.ReadLine());
+            if (!decimal.TryParse(Console.ReadLine(), out productPrice))
+            {
+                Console.WriteLine("Invalid price.");
+                break;
+            }
+
             Console.Write("Quantity of the product: ");
-            quantity = int.Parse(Console.ReadLine());
-            inventory.Add(name, price, quantity);
+            if (!int.TryParse(Console.ReadLine(), out productQuantity))
+            {
+                Console.WriteLine("Invalid quantity.");
+                break;
+            }
+
+            var newProduct = new Product(productName, productPrice, productQuantity);
+
+            if (newProduct.IsValid())
+                inventory.AddProduct(newProduct);
+            else
+                Console.WriteLine("The values can't be negative.");
+
             break;
 
         case 2:
-            inventory.Print();
+            Console.WriteLine(inventory.PrintAllProducts());
             break;
 
         case 3:
             Console.Write("Name of a product to edit it: ");
-            name = Console.ReadLine();
-            Edit(name);
+            productName = Console.ReadLine();
+
+            var product = inventory.FindProduct(productName);
+            if (product == null)
+            {
+                Console.WriteLine("The product is not found.");
+                break;
+            }
+              
+            EditProductMenu(product);
             break;
 
         case 4:
             Console.Write("Name of a product to delete it: ");
-            name = Console.ReadLine();
-            inventory.Delete(name);
+            productName = Console.ReadLine();
+
+            product = inventory.FindProduct(productName);
+            if (product == null)
+            {
+                Console.WriteLine("The product is not found.");
+                break;
+            }
+              
+            inventory.DeleteProduct(product);
             break;
 
         case 5:
             Console.Write("Name of a product to search for it: ");
-            name = Console.ReadLine();
-            var index = inventory.IndexOf(name);
-            if (index == -1)
-                Console.WriteLine($"{name} doesn't exist.");
+            productName = Console.ReadLine();
 
-            else
+            product = inventory.FindProduct(productName);
+            if (product == null)
             {
-                Console.WriteLine();
-                inventory.Print(index);
+                Console.WriteLine("The product is not found.");
+                break;
             }
+
+            Console.WriteLine(product.ToString());
             break;
 
         default:
@@ -63,24 +100,21 @@ while (true)
     Console.Clear();
 }
 
-void Edit(string name)
+void EditProductMenu(Product product)
 {
-    var index = inventory.IndexOf(name);
-    if (index == -1)
-    {
-        Console.WriteLine($"{name} doesn't exist.");
-        return;
-    }
-
     Console.Clear();
-    Console.WriteLine($"The current data of {name}: ");
-    inventory.Print(index);
+    Console.WriteLine($"The current data of {product.Name}: ");
+    Console.WriteLine(product.ToString());
 
     PrintEditMenu();
 
-    int option;
-    option = int.Parse(Console.ReadLine());
-    switch (option)
+    if (!int.TryParse(Console.ReadLine(), out menuOption))
+    {
+        Console.WriteLine("Invalid option.");
+        return;
+    }
+
+    switch (menuOption)
     {
         case 0:
             return;
@@ -88,23 +122,36 @@ void Edit(string name)
         case 1:
             Console.Write("Enter the new name: ");
             var newName = Console.ReadLine();
-            inventory.Edit(index, newName);
+
+            inventory.EditProductName(product, newName);
             break;
 
         case 2:
             Console.Write("Enter the new price: ");
-            var newPrice = decimal.Parse(Console.ReadLine());
-            inventory.Edit(index, newPrice);
+            if (!decimal.TryParse(Console.ReadLine(), out var newPrice) 
+                || !Product.ValidPrice(newPrice))
+            {
+                Console.WriteLine("Invalid price.");
+                return;
+            }
+
+            inventory.EditProductPrice(product, newPrice);
             break;
 
         case 3:
             Console.Write("Enter the new quantity: ");
-            var newQuantity = int.Parse(Console.ReadLine());
-            inventory.Edit(index, newQuantity);
+            if (!int.TryParse(Console.ReadLine(), out var newQuantity)
+                || !Product.ValidQuantity(newQuantity))
+            {
+                Console.WriteLine("Invalid quantity.");
+                break;
+            }
+
+            inventory.EditProductQuantity(product, newQuantity);
             break;
 
         default:
-            Console.WriteLine("Please use a valid edit option.");
+            Console.WriteLine("Please enter a valid edit option.");
             break;
     }
 }
@@ -118,7 +165,7 @@ static void PrintMainMenu()
     Console.WriteLine("4. Delete a product.");
     Console.WriteLine("5. Search for a product.");
     Console.WriteLine("0. Exit.\n");
-    Console.Write("Choose a valid option: ");
+    Console.Write("Enter a valid option: ");
 }
 
 static void PrintEditMenu()
@@ -127,5 +174,5 @@ static void PrintEditMenu()
     Console.WriteLine("2. Edit the price.");
     Console.WriteLine("3. Edit the quantity.");
     Console.WriteLine("0. Cancel.\n");
-    Console.Write("Choose a valid option: ");
+    Console.Write("Enter a valid option: ");
 }
