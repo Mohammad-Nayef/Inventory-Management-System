@@ -17,14 +17,4 @@
             Quantity: {Quantity}
             """;
     }
-
-    public static bool ValidPrice(decimal productPrice)
-    {
-        return productPrice >= 0;
-    }
-    
-    public static bool ValidQuantity(int productQuantity)
-    {
-        return productQuantity >= 0;
-    }
 }

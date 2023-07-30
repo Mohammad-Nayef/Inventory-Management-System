@@ -6,7 +6,8 @@ int productQuantity, menuOption;
 while (true)
 {
     PrintMainMenu();
-    if (!int.TryParse(Console.ReadLine(), out menuOption))
+    bool converted = int.TryParse(Console.ReadLine(), out menuOption);
+    if (!converted)
     {
         Console.WriteLine("Invalid option.");
         continue;
@@ -22,14 +23,16 @@ while (true)
             productName = Console.ReadLine();
 
             Console.Write("Price of the product: ");
-            if (!decimal.TryParse(Console.ReadLine(), out productPrice))
+            converted = decimal.TryParse(Console.ReadLine(), out productPrice);
+            if (!converted)
             {
                 Console.WriteLine("Invalid price.");
                 break;
             }
 
             Console.Write("Quantity of the product: ");
-            if (!int.TryParse(Console.ReadLine(), out productQuantity))
+            converted = int.TryParse(Console.ReadLine(), out productQuantity);
+            if (!converted)
             {
                 Console.WriteLine("Invalid quantity.");
                 break;
@@ -107,8 +110,8 @@ void EditProductMenu(Product product)
     Console.WriteLine(product.ToString());
 
     PrintEditMenu();
-
-    if (!int.TryParse(Console.ReadLine(), out menuOption))
+    bool converted = int.TryParse(Console.ReadLine(), out menuOption);
+    if (!converted)
     {
         Console.WriteLine("Invalid option.");
         return;
@@ -128,8 +131,8 @@ void EditProductMenu(Product product)
 
         case 2:
             Console.Write("Enter the new price: ");
-            if (!decimal.TryParse(Console.ReadLine(), out var newPrice) 
-                || !Product.ValidPrice(newPrice))
+            converted = decimal.TryParse(Console.ReadLine(), out var newPrice);
+            if (!converted || !ProductValidator.IsValidPrice(newPrice))
             {
                 Console.WriteLine("Invalid price.");
                 return;
@@ -140,8 +143,8 @@ void EditProductMenu(Product product)
 
         case 3:
             Console.Write("Enter the new quantity: ");
-            if (!int.TryParse(Console.ReadLine(), out var newQuantity)
-                || !Product.ValidQuantity(newQuantity))
+            converted = int.TryParse(Console.ReadLine(), out var newQuantity);
+            if (!converted || !ProductValidator.IsValidQuantity(newQuantity))
             {
                 Console.WriteLine("Invalid quantity.");
                 break;
