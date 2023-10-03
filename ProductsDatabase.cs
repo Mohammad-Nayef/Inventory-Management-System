@@ -65,6 +65,17 @@ public class ProductsDatabase
         ExecuteQuery(query);
     }
 
+    public void EditProductQuantity(string productName, int newQuantity)
+    {
+        var query = $"""
+                UPDATE Products
+                SET quantity = '{newQuantity}'
+                WHERE name = '{productName}'
+                """;
+
+        ExecuteQuery(query);
+    }
+
     public void ExecuteQuery(string query)
     {
         var sqlCommand = new SqlCommand(query, sqlConnection);
