@@ -76,6 +76,16 @@ public class ProductsDatabase
         ExecuteQuery(query);
     }
 
+    public void DeleteProduct(string productName)
+    {
+        var query = $"""
+                DELETE FROM Products
+                WHERE name = '{productName}'
+                """;
+
+        ExecuteQuery(query);
+    }
+
     public void ExecuteQuery(string query)
     {
         var sqlCommand = new SqlCommand(query, sqlConnection);
