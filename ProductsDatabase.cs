@@ -105,14 +105,19 @@ public class ProductsDatabase
         {
             while (productsDataReader.Read())
             {
-                var name = productsDataReader.GetString(0);
-                var price = (decimal)productsDataReader.GetDouble(1);
-                var quantity = productsDataReader.GetInt32(2);
-
-                products.Add(new Product(name, price, quantity));
+                products.Add(GetTheProduct(productsDataReader));
             }
         }
 
         return products;
+    }
+
+    private static Product GetTheProduct(SqlDataReader productsDataReader)
+    {
+        var name = productsDataReader.GetString(0);
+        var price = (decimal)productsDataReader.GetDouble(1);
+        var quantity = productsDataReader.GetInt32(2);
+
+        return new Product(name, price, quantity);
     }
 }
