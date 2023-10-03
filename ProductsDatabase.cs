@@ -48,4 +48,28 @@ public class ProductsDatabase
         var sqlCommand = new SqlCommand(query, sqlConnection);
         sqlCommand.ExecuteNonQuery();
     }
+
+    public List<Product> GetAllProducts()
+    {
+        var query = """
+            SELECT * FROM Products
+            """;
+
+        var sqlCommand = new SqlCommand(query, sqlConnection);
+        var products = new List<Product>();
+
+        using (var productsDataReader = sqlCommand.ExecuteReader())
+        {
+            while (productsDataReader.Read())
+            {
+                var name = productsDataReader.GetString(0);
+                var price = (decimal)productsDataReader.GetDouble(1);
+                var quantity = productsDataReader.GetInt32(2);
+
+                products.Add(new Product(name, price, quantity));
+            }
+        }
+
+        return products;
+    }
 }
