@@ -20,11 +20,14 @@ public class ProductsDatabase
     private void CreateProductsTable()
     {
         var query = """
-                CREATE TABLE Products (
-                    name VARCHAR,
-                    price FLOAT,
-                    quantity INT
-                )
+                IF  object_id('Products') IS NULL
+                BEGIN
+                    create table products (
+                	    name VARCHAR,
+                        price FLOAT,
+                        quantity INT
+                    )
+                END
                 """;
 
         ExecuteQuery(query);
