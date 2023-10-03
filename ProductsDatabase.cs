@@ -43,6 +43,17 @@ public class ProductsDatabase
         ExecuteQuery(query);
     }
 
+    public void EditProductName(string oldName, string newName)
+    {
+        var query = $"""
+                UPDATE Products
+                SET name = '{newName}'
+                WHERE name = '{oldName}'
+                """;
+
+        ExecuteQuery(query);
+    }
+
     public void ExecuteQuery(string query)
     {
         var sqlCommand = new SqlCommand(query, sqlConnection);
