@@ -22,8 +22,8 @@ public class ProductsDatabase
         var query = """
                 IF  object_id('Products') IS NULL
                 BEGIN
-                    create table products (
-                	    name VARCHAR,
+                    CREATE TABLE Products (
+                	    name VARCHAR(100),
                         price FLOAT,
                         quantity INT
                     )
@@ -58,7 +58,7 @@ public class ProductsDatabase
     {
         var query = $"""
                 UPDATE Products
-                SET price = '{newPrice}'
+                SET price = {newPrice}
                 WHERE name = '{productName}'
                 """;
 
@@ -69,7 +69,7 @@ public class ProductsDatabase
     {
         var query = $"""
                 UPDATE Products
-                SET quantity = '{newQuantity}'
+                SET quantity = {newQuantity}
                 WHERE name = '{productName}'
                 """;
 
