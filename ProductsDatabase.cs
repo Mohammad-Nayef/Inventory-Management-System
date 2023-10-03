@@ -30,6 +30,16 @@ public class ProductsDatabase
         ExecuteQuery(query);
     }
 
+    public void AddProduct(Product newProduct)
+    {
+        var query = $"""
+                INSERT INTO Products
+                VALUES ({newProduct.Name}, {newProduct.Price}, {newProduct.Quantity})
+                """;
+
+        ExecuteQuery(query);
+    }
+
     public void ExecuteQuery(string query)
     {
         var sqlCommand = new SqlCommand(query, sqlConnection);

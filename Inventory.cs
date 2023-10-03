@@ -6,7 +6,7 @@ public class Inventory
 
     public void AddProduct(Product newProduct)
     {
-        _products.Add(newProduct);
+        ProductsDatabase.Instance.AddProduct(newProduct);
     }
 
     public bool IsEmpty()
