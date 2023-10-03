@@ -14,7 +14,25 @@ public class ProductsDatabase
     {
         sqlConnection = new SqlConnection(connectionString);
         sqlConnection.Open();
+        CreateProductsTable();
     }
 
-    
+    private void CreateProductsTable()
+    {
+        var query = """
+                CREATE TABLE Products (
+                    name VARCHAR,
+                    price FLOAT,
+                    quantity INT
+                )
+                """;
+
+        ExecuteQuery(query);
+    }
+
+    public void ExecuteQuery(string query)
+    {
+        var sqlCommand = new SqlCommand(query, sqlConnection);
+        sqlCommand.ExecuteNonQuery();
+    }
 }
