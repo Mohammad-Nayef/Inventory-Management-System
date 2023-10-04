@@ -4,12 +4,12 @@ public class Inventory
 {
     public void AddProduct(Product newProduct)
     {
-        ProductsDatabase.Instance.AddProduct(newProduct);
+        SqlServerDb.Instance.AddProduct(newProduct);
     }
 
     public bool IsEmpty()
     {
-        return ProductsDatabase.Instance.GetAllProducts().Count == 0;
+        return SqlServerDb.Instance.GetAllProducts().Count == 0;
     }
 
     public string PrintAllProducts()
@@ -18,7 +18,7 @@ public class Inventory
             return "There are no products.";
 
         var allProducts = new StringBuilder();
-        var products = ProductsDatabase.Instance.GetAllProducts();
+        var products = SqlServerDb.Instance.GetAllProducts();
 
         for (var i = 0; i < products.Count; i++)
         {
@@ -35,22 +35,22 @@ public class Inventory
 
     public void EditProductName(Product product, string newName)
     {
-        ProductsDatabase.Instance.EditProductName(product.Name, newName);
+        SqlServerDb.Instance.EditProductName(product.Name, newName);
     }
 
     public void EditProductPrice(Product product, decimal newPrice)
     {
-        ProductsDatabase.Instance.EditProductPrice(product.Name, newPrice);
+        SqlServerDb.Instance.EditProductPrice(product.Name, newPrice);
     }
 
     public void EditProductQuantity(Product product, int newQuantity)
     {
-        ProductsDatabase.Instance.EditProductQuantity(product.Name, newQuantity);
+        SqlServerDb.Instance.EditProductQuantity(product.Name, newQuantity);
     }
 
     public void DeleteProduct(Product product)
     {
-        ProductsDatabase.Instance.DeleteProduct(product.Name);
+        SqlServerDb.Instance.DeleteProduct(product.Name);
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class Inventory
     /// <returns>Product?</returns>
     public Product? FindProduct(string productName)
     {
-        return ProductsDatabase.Instance.GetAllProducts()
+        return SqlServerDb.Instance.GetAllProducts()
             .SingleOrDefault(product => product.Name == productName);
     }
 }

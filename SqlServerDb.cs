@@ -1,16 +1,16 @@
 ﻿using System.Data.SqlClient;
 
-public class ProductsDatabase
+public class SqlServerDb
 {
-    private static readonly Lazy<ProductsDatabase> _lazyInstance = new Lazy<ProductsDatabase>(() => new ProductsDatabase());
+    private static readonly Lazy<SqlServerDb> _lazyInstance = new Lazy<SqlServerDb>(() => new SqlServerDb());
     private static SqlConnection sqlConnection;
     private string connectionString = "Data Source = MOHAMMAD; " +
         "Initial Catalog = Inventory; " +
         "Integrated Security = True;";
 
-    public static ProductsDatabase Instance => _lazyInstance.Value;
+    public static SqlServerDb Instance => _lazyInstance.Value;
 
-    private ProductsDatabase()
+    private SqlServerDb()
     {
         sqlConnection = new SqlConnection(connectionString);
         sqlConnection.Open();
