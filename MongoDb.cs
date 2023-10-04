@@ -21,4 +21,10 @@ public class MongoDb
     {
         productsCollection.InsertOneAsync(newProduct);
     }
+
+    public void EditProductName(string oldName, string newName)
+    {
+        var nameUpdate = Builders<Product>.Update.Set("Name", newName);
+        productsCollection.FindOneAndUpdateAsync(product => product.Name == oldName, nameUpdate);
+    }
 }
