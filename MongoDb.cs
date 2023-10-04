@@ -39,4 +39,9 @@ public class MongoDb
         var quantityUpdate = Builders<Product>.Update.Set("Quantity", newQuantity);
         productsCollection.FindOneAndUpdateAsync(product => product.Name == productName, quantityUpdate);
     }
+
+    public void DeleteProduct(string productName)
+    {
+        productsCollection.DeleteOneAsync(product => product.Name == productName);
+    }
 }
