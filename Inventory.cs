@@ -2,16 +2,14 @@
 
 public class Inventory
 {
-    private List<Product> _products = new();
-
     public void AddProduct(Product newProduct)
     {
-        _products.Add(newProduct);
+        MongoDb.Instance.AddProduct(newProduct);
     }
 
     public bool IsEmpty()
     {
-        return _products.Count == 0;
+        return MongoDb.Instance.GetAllProducts().Count == 0;
     }
 
     public string PrintAllProducts()
@@ -20,12 +18,13 @@ public class Inventory
             return "There are no products.";
 
         var allProducts = new StringBuilder();
+        var products = MongoDb.Instance.GetAllProducts();
 
-        for (var i = 0; i < _products.Count; i++)
+        for (var i = 0; i < products.Count; i++)
         {
             allProducts.Append($"""
                 Product #{i + 1}:
-                {_products[i].ToString()}
+                {products[i].ToString()}
                 
 
                 """);
@@ -36,22 +35,22 @@ public class Inventory
 
     public void EditProductName(Product product, string? newName)
     {
-        product.Name = newName;
+        MongoDb.Instance.EditProductName(product.Name, newName);
     }
 
     public void EditProductPrice(Product product, decimal newPrice)
     {
-        product.Price = newPrice;
+        MongoDb.Instance.EditProductPrice(product.Name, newPrice);
     }
 
     public void EditProductQuantity(Product product, int newQuantity)
     {
-        product.Quantity = newQuantity;
+        MongoDb.Instance.EditProductQuantity(product.Name, newQuantity);
     }
 
     public void DeleteProduct(Product product)
     {
-        _products.Remove(product);
+        MongoDb.Instance.DeleteProduct(product.Name);
     }
 
     /// <summary>
@@ -60,11 +59,7 @@ public class Inventory
     /// <returns>Product?</returns>
     public Product? FindProduct(string? productName)
     {
-        foreach (var product in _products)
-        {
-            if (product.Name.Equals(productName, StringComparison.InvariantCultureIgnoreCase))
-                return product;
-        }
-        return null;
+        return MongoDb.Instance.GetAllProducts()
+            .SingleOrDefault(product => product.Name == productName);
     }
 }
