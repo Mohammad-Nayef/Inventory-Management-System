@@ -16,4 +16,9 @@ public class MongoDb
         database = client.GetDatabase("inventory");
         productsCollection = database.GetCollection<Product>("products");
     }
+
+    public void AddProduct(Product newProduct)
+    {
+        productsCollection.InsertOneAsync(newProduct);
+    }
 }
