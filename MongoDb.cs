@@ -44,4 +44,6 @@ public class MongoDb
     {
         productsCollection.DeleteOneAsync(product => product.Name == productName);
     }
+
+    public List<Product> GetAllProducts() => productsCollection.Find(_ => true).ToList();
 }
