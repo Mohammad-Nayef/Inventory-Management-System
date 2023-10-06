@@ -18,7 +18,6 @@ public class SqlServerDb
     private async Task InitializeDatabaseAsync()
     {
         sqlConnection = new SqlConnection(connectionString);
-        await sqlConnection.OpenAsync();
         await CreateProductsTableAsync();
     }
 
@@ -94,16 +93,19 @@ public class SqlServerDb
     /// <summary>
     /// Opens database connection then executes the query and closes the connection.
     /// </summary>
-    public async Task ExecuteQueryAsync(string query)
+    private async Task ExecuteQueryAsync(string query)
     {
+        await sqlConnection.OpenAsync();
         var sqlCommand = new SqlCommand(query, sqlConnection);
         await sqlCommand.ExecuteNonQueryAsync();
+        await sqlConnection.CloseAsync();
     }
 
     public async Task<List<Product>> GetAllProductsAsync()
     {
         var query = "SELECT * FROM Products";
 
+        await sqlConnection.OpenAsync();
         var sqlCommand = new SqlCommand(query, sqlConnection);
         var products = new List<Product>();
 
@@ -115,6 +117,7 @@ public class SqlServerDb
             }
         }
 
+        await sqlConnection.CloseAsync();
         return products;
     }
 
