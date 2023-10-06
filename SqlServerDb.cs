@@ -12,15 +12,20 @@ public class SqlServerDb
 
     private SqlServerDb()
     {
-        sqlConnection = new SqlConnection(connectionString);
-        sqlConnection.Open();
-        CreateProductsTable();
+        InitializeDatabaseAsync().Wait();
     }
 
-    private void CreateProductsTable()
+    private async Task InitializeDatabaseAsync()
+    {
+        sqlConnection = new SqlConnection(connectionString);
+        await sqlConnection.OpenAsync();
+        await CreateProductsTableAsync();
+    }
+
+    private async Task CreateProductsTableAsync()
     {
         var query = """
-                IF  object_id('Products') IS NULL
+                IF object_id('Products') IS NULL
                 BEGIN
                     CREATE TABLE Products (
                 	    name VARCHAR(100),
@@ -30,20 +35,20 @@ public class SqlServerDb
                 END
                 """;
 
-        ExecuteQuery(query);
+        await ExecuteQueryAsync(query);
     }
 
-    public void AddProduct(Product newProduct)
+    public async Task AddProductAsync(Product newProduct)
     {
         var query = $"""
                 INSERT INTO Products
                 VALUES ({newProduct.Name}, {newProduct.Price}, {newProduct.Quantity})
                 """;
 
-        ExecuteQuery(query);
+        await ExecuteQueryAsync(query);
     }
 
-    public void EditProductName(string oldName, string newName)
+    public async Task EditProductNameAsync(string oldName, string newName)
     {
         var query = $"""
                 UPDATE Products
@@ -51,10 +56,10 @@ public class SqlServerDb
                 WHERE name = '{oldName}'
                 """;
 
-        ExecuteQuery(query);
+        await ExecuteQueryAsync(query);
     }
 
-    public void EditProductPrice(string productName, decimal newPrice)
+    public async Task EditProductPriceAsync(string productName, decimal newPrice)
     {
         var query = $"""
                 UPDATE Products
@@ -62,10 +67,10 @@ public class SqlServerDb
                 WHERE name = '{productName}'
                 """;
 
-        ExecuteQuery(query);
+        await ExecuteQueryAsync(query);
     }
 
-    public void EditProductQuantity(string productName, int newQuantity)
+    public async Task EditProductQuantityAsync(string productName, int newQuantity)
     {
         var query = $"""
                 UPDATE Products
@@ -73,30 +78,31 @@ public class SqlServerDb
                 WHERE name = '{productName}'
                 """;
 
-        ExecuteQuery(query);
+        await ExecuteQueryAsync(query);
     }
 
-    public void DeleteProduct(string productName)
+    public async Task DeleteProductAsync(string productName)
     {
         var query = $"""
                 DELETE FROM Products
                 WHERE name = '{productName}'
                 """;
 
-        ExecuteQuery(query);
+        await ExecuteQueryAsync(query);
     }
 
-    public void ExecuteQuery(string query)
+    /// <summary>
+    /// Opens database connection then executes the query and closes the connection.
+    /// </summary>
+    public async Task ExecuteQueryAsync(string query)
     {
         var sqlCommand = new SqlCommand(query, sqlConnection);
-        sqlCommand.ExecuteNonQuery();
+        await sqlCommand.ExecuteNonQueryAsync();
     }
 
-    public List<Product> GetAllProducts()
+    public async Task<List<Product>> GetAllProductsAsync()
     {
-        var query = """
-            SELECT * FROM Products
-            """;
+        var query = "SELECT * FROM Products";
 
         var sqlCommand = new SqlCommand(query, sqlConnection);
         var products = new List<Product>();
