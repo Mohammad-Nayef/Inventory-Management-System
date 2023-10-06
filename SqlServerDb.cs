@@ -113,7 +113,7 @@ public class SqlServerDb
         {
             while (productsDataReader.Read())
             {
-                products.Add(GetTheProduct(productsDataReader));
+                products.Add(GetProductFromString(productsDataReader));
             }
         }
 
@@ -121,7 +121,7 @@ public class SqlServerDb
         return products;
     }
 
-    private static Product GetTheProduct(SqlDataReader productsDataReader)
+    private static Product GetProductFromString(SqlDataReader productsDataReader)
     {
         var name = productsDataReader.GetString(0);
         var price = (decimal)productsDataReader.GetDouble(1);
