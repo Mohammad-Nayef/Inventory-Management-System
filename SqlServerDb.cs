@@ -81,7 +81,7 @@ public class SqlServerDb
     }
 
     public async Task DeleteProductAsync(string productName)
-    {
+    {   
         var query = $"""
                 DELETE FROM Products
                 WHERE name = '{productName}'
@@ -96,24 +96,29 @@ public class SqlServerDb
     private async Task ExecuteQueryAsync(string query)
     {
         await sqlConnection.OpenAsync();
-        var sqlCommand = new SqlCommand(query, sqlConnection);
-        await sqlCommand.ExecuteNonQueryAsync();
+
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        {
+            await sqlCommand.ExecuteNonQueryAsync();
+        }
+
         await sqlConnection.CloseAsync();
     }
 
     public async Task<List<Product>> GetAllProductsAsync()
     {
         var query = "SELECT * FROM Products";
-
-        await sqlConnection.OpenAsync();
-        var sqlCommand = new SqlCommand(query, sqlConnection);
         var products = new List<Product>();
+        await sqlConnection.OpenAsync();
 
-        using (var productsDataReader = sqlCommand.ExecuteReader())
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
         {
-            while (productsDataReader.Read())
+            using (var productsDataReader = sqlCommand.ExecuteReader())
             {
-                products.Add(GetProductFromString(productsDataReader));
+                while (productsDataReader.Read())
+                {
+                    products.Add(GetProductFromString(productsDataReader));
+                }
             }
         }
 
