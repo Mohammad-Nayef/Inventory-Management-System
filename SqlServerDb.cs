@@ -56,7 +56,6 @@ public class SqlServerDb
 
         using (var sqlCommand = new SqlCommand(query, sqlConnection))
         {
-            Console.WriteLine(nameof(newProduct.Name));
             sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Name)}", newProduct.Name);
             sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Price)}", newProduct.Price);
             sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Quantity)}", newProduct.Quantity);
