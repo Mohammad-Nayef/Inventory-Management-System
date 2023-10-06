@@ -34,71 +34,110 @@ public class SqlServerDb
                 END
                 """;
 
-        await ExecuteQueryAsync(query);
+        await sqlConnection.OpenAsync();
+
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        {
+            await sqlCommand.ExecuteNonQueryAsync();
+        }
+
+        await sqlConnection.CloseAsync();
     }
 
     public async Task AddProductAsync(Product newProduct)
     {
         var query = $"""
                 INSERT INTO Products
-                VALUES ({newProduct.Name}, {newProduct.Price}, {newProduct.Quantity})
+                VALUES (@{nameof(newProduct.Name)}, @{nameof(newProduct.Price)}, 
+                @{nameof(newProduct.Quantity)})
                 """;
 
-        await ExecuteQueryAsync(query);
+        await sqlConnection.OpenAsync();
+
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        {
+            Console.WriteLine(nameof(newProduct.Name));
+            sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Name)}", newProduct.Name);
+            sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Price)}", newProduct.Price);
+            sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Quantity)}", newProduct.Quantity);
+            await sqlCommand.ExecuteNonQueryAsync();
+        }
+
+        await sqlConnection.CloseAsync();
     }
 
     public async Task EditProductNameAsync(string oldName, string newName)
     {
         var query = $"""
                 UPDATE Products
-                SET name = '{newName}'
-                WHERE name = '{oldName}'
+                SET name = @{nameof(newName)}
+                WHERE name = @{nameof(oldName)}
                 """;
 
-        await ExecuteQueryAsync(query);
+        await sqlConnection.OpenAsync();
+
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        {
+            sqlCommand.Parameters.AddWithValue($"@{nameof(newName)}", newName);
+            sqlCommand.Parameters.AddWithValue($"@{nameof(oldName)}", oldName);
+            await sqlCommand.ExecuteNonQueryAsync();
+        }
+
+        await sqlConnection.CloseAsync();
     }
 
     public async Task EditProductPriceAsync(string productName, decimal newPrice)
     {
         var query = $"""
                 UPDATE Products
-                SET price = {newPrice}
-                WHERE name = '{productName}'
+                SET price = @{nameof(newPrice)}
+                WHERE name = @{nameof(productName)}
                 """;
 
-        await ExecuteQueryAsync(query);
+        await sqlConnection.OpenAsync();
+
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        {
+            sqlCommand.Parameters.AddWithValue($"@{nameof(newPrice)}", newPrice);
+            sqlCommand.Parameters.AddWithValue($"@{nameof(productName)}", productName);
+            await sqlCommand.ExecuteNonQueryAsync();
+        }
+
+        await sqlConnection.CloseAsync();
     }
 
     public async Task EditProductQuantityAsync(string productName, int newQuantity)
     {
         var query = $"""
                 UPDATE Products
-                SET quantity = {newQuantity}
-                WHERE name = '{productName}'
+                SET quantity = @{nameof(newQuantity)}
+                WHERE name = @{nameof(productName)}
                 """;
 
-        await ExecuteQueryAsync(query);
+        await sqlConnection.OpenAsync();
+
+        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        {
+            sqlCommand.Parameters.AddWithValue($"@{nameof(newQuantity)}", newQuantity);
+            sqlCommand.Parameters.AddWithValue($"@{nameof(productName)}", productName);
+            await sqlCommand.ExecuteNonQueryAsync();
+        }
+
+        await sqlConnection.CloseAsync();
     }
 
     public async Task DeleteProductAsync(string productName)
     {   
         var query = $"""
                 DELETE FROM Products
-                WHERE name = '{productName}'
+                WHERE name = @{nameof(productName)}
                 """;
 
-        await ExecuteQueryAsync(query);
-    }
-
-    /// <summary>
-    /// Opens database connection then executes the query and closes the connection.
-    /// </summary>
-    private async Task ExecuteQueryAsync(string query)
-    {
         await sqlConnection.OpenAsync();
 
         using (var sqlCommand = new SqlCommand(query, sqlConnection))
         {
+            sqlCommand.Parameters.AddWithValue($"@{nameof(productName)}", productName);
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
