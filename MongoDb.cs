@@ -17,33 +17,33 @@ public class MongoDb
         productsCollection = database.GetCollection<Product>("products");
     }
 
-    public void AddProduct(Product newProduct)
+    public async Task AddProductAsync(Product newProduct)
     {
-        productsCollection.InsertOneAsync(newProduct);
+        await productsCollection.InsertOneAsync(newProduct);
     }
 
-    public void EditProductName(string oldName, string newName)
+    public async Task EditProductNameAsync(string oldName, string newName)
     {
         var nameUpdate = Builders<Product>.Update.Set("Name", newName);
-        productsCollection.FindOneAndUpdateAsync(product => product.Name == oldName, nameUpdate);
+        await productsCollection.FindOneAndUpdateAsync(product => product.Name == oldName, nameUpdate);
     }
 
-    public void EditProductPrice(string productName, decimal newPrice)
+    public async Task EditProductPriceAsync(string productName, decimal newPrice)
     {
         var priceUpdate = Builders<Product>.Update.Set("Price", newPrice);
-        productsCollection.FindOneAndUpdateAsync(product => product.Name == productName, priceUpdate);
+        await productsCollection.FindOneAndUpdateAsync(product => product.Name == productName, priceUpdate);
     }
 
-    public void EditProductQuantity(string productName, int newQuantity)
+    public async Task EditProductQuantityAsync(string productName, int newQuantity)
     {
         var quantityUpdate = Builders<Product>.Update.Set("Quantity", newQuantity);
-        productsCollection.FindOneAndUpdateAsync(product => product.Name == productName, quantityUpdate);
+        await productsCollection.FindOneAndUpdateAsync(product => product.Name == productName, quantityUpdate);
     }
 
-    public void DeleteProduct(string productName)
+    public async Task DeleteProductAsync(string productName)
     {
-        productsCollection.DeleteOneAsync(product => product.Name == productName);
+        await productsCollection.DeleteOneAsync(product => product.Name == productName);
     }
 
-    public List<Product> GetAllProducts() => productsCollection.Find(_ => true).ToList();
+    public async Task<List<Product>> GetAllProductsAsync() => (await productsCollection.FindAsync(_ => true)).ToList();
 }
