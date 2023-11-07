@@ -2,14 +2,16 @@
 
 public class Inventory
 {
+    private SqlServerDb database = new SqlServerDb(Constants.SqlServerConnectionString);
+
     public async Task AddProductAsync(Product newProduct)
     {
-        await SqlServerDb.Instance.AddProductAsync(newProduct);
+        await database.AddProductAsync(newProduct);
     }
 
     public async Task<bool> IsEmptyAsync()
     {
-        return !(await SqlServerDb.Instance.GetAllProductsAsync())
+        return !(await database.GetAllProductsAsync())
             .Any();
     }
 
@@ -19,7 +21,7 @@ public class Inventory
             return "There are no products.";
 
         var allProducts = new StringBuilder();
-        var products = await SqlServerDb.Instance.GetAllProductsAsync();
+        var products = await database.GetAllProductsAsync();
 
         for (var i = 0; i < products.Count; i++)
         {
@@ -36,22 +38,22 @@ public class Inventory
 
     public async Task EditProductNameAsync(Product product, string newName)
     {
-        await SqlServerDb.Instance.EditProductNameAsync(product.Name, newName);
+        await database.EditProductNameAsync(product.Name, newName);
     }
 
     public async Task EditProductPriceAsync(Product product, decimal newPrice)
     {
-        await SqlServerDb.Instance.EditProductPriceAsync(product.Name, newPrice);
+        await database.EditProductPriceAsync(product.Name, newPrice);
     }
 
     public async Task EditProductQuantityAsync(Product product, int newQuantity)
     {
-        await SqlServerDb.Instance.EditProductQuantityAsync(product.Name, newQuantity);
+        await database.EditProductQuantityAsync(product.Name, newQuantity);
     }
 
     public async Task DeleteProductAsync(Product product)
     {
-        await SqlServerDb.Instance.DeleteProductAsync(product.Name);
+        await database.DeleteProductAsync(product.Name);
     }
 
     /// <summary>
@@ -60,7 +62,7 @@ public class Inventory
     /// <returns>Product?</returns>
     public async Task<Product?> FindProductAsync(string productName)
     {
-        return (await SqlServerDb.Instance.GetAllProductsAsync())
+        return (await database.GetAllProductsAsync())
             .SingleOrDefault(product => product.Name == productName);
     }
 }

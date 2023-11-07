@@ -2,22 +2,18 @@
 
 public class SqlServerDb
 {
-    private static readonly Lazy<SqlServerDb> _lazyInstance = new Lazy<SqlServerDb>(() => new SqlServerDb());
-    private static SqlConnection sqlConnection;
-    private string connectionString = "Data Source = MOHAMMAD; " +
-        "Initial Catalog = Inventory; " +
-        "Integrated Security = True;";
+    private static SqlConnection _sqlConnection;
+    private string _connectionString;
 
-    public static SqlServerDb Instance => _lazyInstance.Value;
-
-    private SqlServerDb()
+    public SqlServerDb(string connectionString)
     {
+        _connectionString = Constants.SqlServerConnectionString;
+        _sqlConnection = new SqlConnection(_connectionString);
         InitializeDatabaseAsync().Wait();
     }
 
     private async Task InitializeDatabaseAsync()
     {
-        sqlConnection = new SqlConnection(connectionString);
         await CreateProductsTableAsync();
     }
 
@@ -34,14 +30,14 @@ public class SqlServerDb
                 END
                 """;
 
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
     }
 
     public async Task AddProductAsync(Product newProduct)
@@ -52,9 +48,9 @@ public class SqlServerDb
                 @{nameof(newProduct.Quantity)})
                 """;
 
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Name)}", newProduct.Name);
             sqlCommand.Parameters.AddWithValue($"@{nameof(newProduct.Price)}", newProduct.Price);
@@ -62,7 +58,7 @@ public class SqlServerDb
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
     }
 
     public async Task EditProductNameAsync(string oldName, string newName)
@@ -73,16 +69,16 @@ public class SqlServerDb
                 WHERE name = @{nameof(oldName)}
                 """;
 
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             sqlCommand.Parameters.AddWithValue($"@{nameof(newName)}", newName);
             sqlCommand.Parameters.AddWithValue($"@{nameof(oldName)}", oldName);
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
     }
 
     public async Task EditProductPriceAsync(string productName, decimal newPrice)
@@ -93,16 +89,16 @@ public class SqlServerDb
                 WHERE name = @{nameof(productName)}
                 """;
 
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             sqlCommand.Parameters.AddWithValue($"@{nameof(newPrice)}", newPrice);
             sqlCommand.Parameters.AddWithValue($"@{nameof(productName)}", productName);
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
     }
 
     public async Task EditProductQuantityAsync(string productName, int newQuantity)
@@ -113,16 +109,16 @@ public class SqlServerDb
                 WHERE name = @{nameof(productName)}
                 """;
 
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             sqlCommand.Parameters.AddWithValue($"@{nameof(newQuantity)}", newQuantity);
             sqlCommand.Parameters.AddWithValue($"@{nameof(productName)}", productName);
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
     }
 
     public async Task DeleteProductAsync(string productName)
@@ -132,24 +128,24 @@ public class SqlServerDb
                 WHERE name = @{nameof(productName)}
                 """;
 
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             sqlCommand.Parameters.AddWithValue($"@{nameof(productName)}", productName);
             await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
     }
 
     public async Task<List<Product>> GetAllProductsAsync()
     {
         var query = "SELECT * FROM Products";
         var products = new List<Product>();
-        await sqlConnection.OpenAsync();
+        await _sqlConnection.OpenAsync();
 
-        using (var sqlCommand = new SqlCommand(query, sqlConnection))
+        using (var sqlCommand = new SqlCommand(query, _sqlConnection))
         {
             using (var productsDataReader = sqlCommand.ExecuteReader())
             {
@@ -160,7 +156,7 @@ public class SqlServerDb
             }
         }
 
-        await sqlConnection.CloseAsync();
+        await _sqlConnection.CloseAsync();
         return products;
     }
 
