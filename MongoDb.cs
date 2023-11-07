@@ -2,15 +2,11 @@
 
 public class MongoDb
 {
-    private static readonly Lazy<MongoDb> _lazyInstance = new Lazy<MongoDb>(() => new MongoDb());
-    private string connectionString = Constants.MongoDbConnectionString;
     private MongoClient client;
     private IMongoDatabase database;
     private IMongoCollection<Product> productsCollection;
 
-    public static MongoDb Instance => _lazyInstance.Value;
-
-    private MongoDb()
+    public MongoDb(string connectionString)
     {
         client = new MongoClient(connectionString);
         database = client.GetDatabase("inventory");
