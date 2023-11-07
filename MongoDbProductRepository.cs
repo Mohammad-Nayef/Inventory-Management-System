@@ -6,9 +6,9 @@ public class MongoDbProductRepository : IProductRepository
     private IMongoDatabase _database;
     private IMongoCollection<Product> _productsCollection;
 
-    public MongoDbProductRepository(string connectionString)
+    public MongoDbProductRepository()
     {
-        _client = new MongoClient(connectionString);
+        _client = new MongoClient(Constants.MongoDbConnectionString);
         _database = _client.GetDatabase("inventory");
         _productsCollection = _database.GetCollection<Product>("products");
     }
