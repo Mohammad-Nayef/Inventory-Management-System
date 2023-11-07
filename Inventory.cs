@@ -2,16 +2,21 @@
 
 public class Inventory
 {
-    private ProductsRepository _mongoDb = new ProductsRepository(Constants.MongoDbConnectionString);
-    
+    private IProductRepository _repository;
+
+    public Inventory(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
     public async Task AddProductAsync(Product newProduct)
     {
-        await _mongoDb.AddProductAsync(newProduct);
+        await _repository.AddProductAsync(newProduct);
     }
 
     public async Task<bool> IsEmptyAsync()
     {
-        return (await _mongoDb.GetAllProductsAsync()).Count == 0;
+        return (await _repository.GetAllProductsAsync()).Count == 0;
     }
 
     public async Task<string> PrintAllProductsAsync()
@@ -20,7 +25,7 @@ public class Inventory
             return "There are no products.";
 
         var allProducts = new StringBuilder();
-        var products = await _mongoDb.GetAllProductsAsync();
+        var products = await _repository.GetAllProductsAsync();
 
         for (var i = 0; i < products.Count; i++)
         {
@@ -37,22 +42,22 @@ public class Inventory
 
     public async Task EditProductNameAsync(Product product, string? newName)
     {
-        await _mongoDb.EditProductNameAsync(product.Name, newName);
+        await _repository.EditProductNameAsync(product.Name, newName);
     }
 
     public async Task EditProductPriceAsync(Product product, decimal newPrice)
     {
-        await _mongoDb.EditProductPriceAsync(product.Name, newPrice);
+        await _repository.EditProductPriceAsync(product.Name, newPrice);
     }
 
     public async Task EditProductQuantityAsync(Product product, int newQuantity)
     {
-        await _mongoDb.EditProductQuantityAsync(product.Name, newQuantity);
+        await _repository.EditProductQuantityAsync(product.Name, newQuantity);
     }
 
     public async Task DeleteProductAsync(Product product)
     {
-        await _mongoDb.DeleteProductAsync(product.Name);
+        await _repository.DeleteProductAsync(product.Name);
     }
 
     /// <summary>
@@ -61,7 +66,7 @@ public class Inventory
     /// <returns>Product?</returns>
     public async Task<Product?> FindProductAsync(string? productName)
     {
-        return (await _mongoDb.GetAllProductsAsync())
+        return (await _repository.GetAllProductsAsync())
             .SingleOrDefault(product => product.Name == productName);
     }
 }
