@@ -1,12 +1,12 @@
 ﻿using MongoDB.Driver;
 
-public class ProductsRepository
+public class MongoDbProductRepository : IProductRepository
 {
     private MongoClient _client;
     private IMongoDatabase _database;
     private IMongoCollection<Product> _productsCollection;
 
-    public ProductsRepository(string connectionString)
+    public MongoDbProductRepository(string connectionString)
     {
         _client = new MongoClient(connectionString);
         _database = _client.GetDatabase("inventory");

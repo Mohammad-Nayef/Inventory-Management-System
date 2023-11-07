@@ -1,4 +1,4 @@
-﻿var inventory = new Inventory();
+﻿var inventory = new Inventory(new MongoDbProductRepository(Constants.MongoDbConnectionString));
 string? productName;
 decimal productPrice; 
 int productQuantity, menuOption;
