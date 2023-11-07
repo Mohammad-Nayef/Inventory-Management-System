@@ -1,4 +1,4 @@
-﻿var inventory = new Inventory();
+﻿var inventory = new Inventory(new SqlServerProductRepository());
 string? productName;
 decimal productPrice; 
 int productQuantity, menuOption;

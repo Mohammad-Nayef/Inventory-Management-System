@@ -2,16 +2,21 @@
 
 public class Inventory
 {
-    private SqlServerDb database = new SqlServerDb(Constants.SqlServerConnectionString);
+    private IProductRepository _repository;
+
+    public Inventory(IProductRepository repository)
+    {
+        _repository = repository;
+    }
 
     public async Task AddProductAsync(Product newProduct)
     {
-        await database.AddProductAsync(newProduct);
+        await _repository.AddProductAsync(newProduct);
     }
 
     public async Task<bool> IsEmptyAsync()
     {
-        return !(await database.GetAllProductsAsync())
+        return !(await _repository.GetAllProductsAsync())
             .Any();
     }
 
@@ -21,7 +26,7 @@ public class Inventory
             return "There are no products.";
 
         var allProducts = new StringBuilder();
-        var products = await database.GetAllProductsAsync();
+        var products = await _repository.GetAllProductsAsync();
 
         for (var i = 0; i < products.Count; i++)
         {
@@ -38,22 +43,22 @@ public class Inventory
 
     public async Task EditProductNameAsync(Product product, string newName)
     {
-        await database.EditProductNameAsync(product.Name, newName);
+        await _repository.EditProductNameAsync(product.Name, newName);
     }
 
     public async Task EditProductPriceAsync(Product product, decimal newPrice)
     {
-        await database.EditProductPriceAsync(product.Name, newPrice);
+        await _repository.EditProductPriceAsync(product.Name, newPrice);
     }
 
     public async Task EditProductQuantityAsync(Product product, int newQuantity)
     {
-        await database.EditProductQuantityAsync(product.Name, newQuantity);
+        await _repository.EditProductQuantityAsync(product.Name, newQuantity);
     }
 
     public async Task DeleteProductAsync(Product product)
     {
-        await database.DeleteProductAsync(product.Name);
+        await _repository.DeleteProductAsync(product.Name);
     }
 
     /// <summary>
@@ -62,7 +67,7 @@ public class Inventory
     /// <returns>Product?</returns>
     public async Task<Product?> FindProductAsync(string productName)
     {
-        return (await database.GetAllProductsAsync())
+        return (await _repository.GetAllProductsAsync())
             .SingleOrDefault(product => product.Name == productName);
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System.Data.SqlClient;
 
-public class SqlServerDb
+public class SqlServerProductRepository : IProductRepository
 {
     private static SqlConnection _sqlConnection;
-    private string _connectionString;
 
-    public SqlServerDb(string connectionString)
+    public SqlServerProductRepository()
     {
-        _connectionString = Constants.SqlServerConnectionString;
-        _sqlConnection = new SqlConnection(_connectionString);
+        _sqlConnection = new SqlConnection(Constants.SqlServerConnectionString);
         InitializeDatabaseAsync().Wait();
     }
 
