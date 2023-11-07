@@ -9,7 +9,8 @@ public class Inventory
 
     public async Task<bool> IsEmptyAsync()
     {
-        return (await SqlServerDb.Instance.GetAllProductsAsync()).Any();
+        return !(await SqlServerDb.Instance.GetAllProductsAsync())
+            .Any();
     }
 
     public async Task<string> PrintAllProductsAsync()
