@@ -2,16 +2,16 @@
 
 public class Inventory
 {
-    private MongoDb mongoDb = new MongoDb(Constants.MongoDbConnectionString);
+    private ProductsRepository _mongoDb = new ProductsRepository(Constants.MongoDbConnectionString);
     
     public async Task AddProductAsync(Product newProduct)
     {
-        await mongoDb.AddProductAsync(newProduct);
+        await _mongoDb.AddProductAsync(newProduct);
     }
 
     public async Task<bool> IsEmptyAsync()
     {
-        return (await mongoDb.GetAllProductsAsync()).Count == 0;
+        return (await _mongoDb.GetAllProductsAsync()).Count == 0;
     }
 
     public async Task<string> PrintAllProductsAsync()
@@ -20,7 +20,7 @@ public class Inventory
             return "There are no products.";
 
         var allProducts = new StringBuilder();
-        var products = await mongoDb.GetAllProductsAsync();
+        var products = await _mongoDb.GetAllProductsAsync();
 
         for (var i = 0; i < products.Count; i++)
         {
@@ -37,22 +37,22 @@ public class Inventory
 
     public async Task EditProductNameAsync(Product product, string? newName)
     {
-        await mongoDb.EditProductNameAsync(product.Name, newName);
+        await _mongoDb.EditProductNameAsync(product.Name, newName);
     }
 
     public async Task EditProductPriceAsync(Product product, decimal newPrice)
     {
-        await mongoDb.EditProductPriceAsync(product.Name, newPrice);
+        await _mongoDb.EditProductPriceAsync(product.Name, newPrice);
     }
 
     public async Task EditProductQuantityAsync(Product product, int newQuantity)
     {
-        await mongoDb.EditProductQuantityAsync(product.Name, newQuantity);
+        await _mongoDb.EditProductQuantityAsync(product.Name, newQuantity);
     }
 
     public async Task DeleteProductAsync(Product product)
     {
-        await mongoDb.DeleteProductAsync(product.Name);
+        await _mongoDb.DeleteProductAsync(product.Name);
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ public class Inventory
     /// <returns>Product?</returns>
     public async Task<Product?> FindProductAsync(string? productName)
     {
-        return (await mongoDb.GetAllProductsAsync())
+        return (await _mongoDb.GetAllProductsAsync())
             .SingleOrDefault(product => product.Name == productName);
     }
 }
