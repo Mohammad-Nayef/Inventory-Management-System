@@ -1,36 +1,7 @@
 ﻿using System.Data.SqlClient;
 
-public class SqlServerProductRepository : IProductRepository
+public class SqlServerProductRepository : SqlServerDatabaseInitializer, IProductRepository
 {
-    private string _connectionString = Constants.SqlServerConnectionString;
-
-    public SqlServerProductRepository()
-    {
-        CreateProductsTableAsync().Wait();
-    }
-
-    private async Task CreateProductsTableAsync()
-    {
-        var query = """
-                IF object_id('Products') IS NULL
-                BEGIN
-                    CREATE TABLE Products (
-                	    name VARCHAR(100),
-                        price FLOAT,
-                        quantity INT
-                    )
-                END
-                """;
-
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            await connection.OpenAsync();
-
-            using var sqlCommand = new SqlCommand(query, connection);
-            await sqlCommand.ExecuteNonQueryAsync();
-        }
-    }
-
     public async Task AddProductAsync(Product newProduct)
     {
         var query = $"""
@@ -109,7 +80,7 @@ public class SqlServerProductRepository : IProductRepository
     }
 
     public async Task DeleteProductAsync(string productName)
-    {   
+    {
         var query = $"""
                 DELETE FROM Products
                 WHERE name = @{nameof(productName)}
