@@ -2,30 +2,36 @@
 
 public class Inventory
 {
-    private List<Product> _products = new();
+    private IProductRepository _repository;
 
-    public void AddProduct(Product newProduct)
+    public Inventory(IProductRepository repository)
     {
-        _products.Add(newProduct);
+        _repository = repository;
     }
 
-    public bool IsEmpty()
+    public async Task AddProductAsync(Product newProduct)
     {
-        return _products.Count == 0;
+        await _repository.AddProductAsync(newProduct);
     }
 
-    public string PrintAllProducts()
+    public async Task<bool> IsEmptyAsync()
     {
-        if (IsEmpty())
+        return (await _repository.GetAllProductsAsync()).Count == 0;
+    }
+
+    public async Task<string> PrintAllProductsAsync()
+    {
+        if (await IsEmptyAsync())
             return "There are no products.";
 
         var allProducts = new StringBuilder();
+        var products = await _repository.GetAllProductsAsync();
 
-        for (var i = 0; i < _products.Count; i++)
+        for (var i = 0; i < products.Count; i++)
         {
             allProducts.Append($"""
                 Product #{i + 1}:
-                {_products[i].ToString()}
+                {products[i].ToString()}
                 
 
                 """);
@@ -34,37 +40,33 @@ public class Inventory
         return allProducts.ToString();
     }
 
-    public void EditProductName(Product product, string? newName)
+    public async Task EditProductNameAsync(Product product, string? newName)
     {
-        product.Name = newName;
+        await _repository.EditProductNameAsync(product.Name, newName);
     }
 
-    public void EditProductPrice(Product product, decimal newPrice)
+    public async Task EditProductPriceAsync(Product product, decimal newPrice)
     {
-        product.Price = newPrice;
+        await _repository.EditProductPriceAsync(product.Name, newPrice);
     }
 
-    public void EditProductQuantity(Product product, int newQuantity)
+    public async Task EditProductQuantityAsync(Product product, int newQuantity)
     {
-        product.Quantity = newQuantity;
+        await _repository.EditProductQuantityAsync(product.Name, newQuantity);
     }
 
-    public void DeleteProduct(Product product)
+    public async Task DeleteProductAsync(Product product)
     {
-        _products.Remove(product);
+        await _repository.DeleteProductAsync(product.Name);
     }
 
     /// <summary>
     /// Returns an object of the product or null (if it's not found).
     /// </summary>
     /// <returns>Product?</returns>
-    public Product? FindProduct(string? productName)
+    public async Task<Product?> FindProductAsync(string? productName)
     {
-        foreach (var product in _products)
-        {
-            if (product.Name.Equals(productName, StringComparison.InvariantCultureIgnoreCase))
-                return product;
-        }
-        return null;
+        return (await _repository.GetAllProductsAsync())
+            .SingleOrDefault(product => product.Name == productName);
     }
 }
