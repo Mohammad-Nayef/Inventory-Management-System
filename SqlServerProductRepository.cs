@@ -6,12 +6,7 @@ public class SqlServerProductRepository : IProductRepository
 
     public SqlServerProductRepository()
     {
-        InitializeDatabaseAsync().Wait();
-    }
-
-    private async Task InitializeDatabaseAsync()
-    {
-        await CreateProductsTableAsync();
+        CreateProductsTableAsync().Wait();
     }
 
     private async Task CreateProductsTableAsync()
