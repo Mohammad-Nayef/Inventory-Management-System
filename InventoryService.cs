@@ -1,10 +1,10 @@
 ﻿using System.Text;
 
-public class Inventory
+public class InventoryService
 {
     private IProductRepository _repository;
 
-    public Inventory(IProductRepository repository)
+    public InventoryService(IProductRepository repository)
     {
         _repository = repository;
     }
