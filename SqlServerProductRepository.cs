@@ -125,4 +125,24 @@ public class SqlServerProductRepository : SqlServerDatabaseInitializer, IProduct
 
         return new Product(name, price, quantity);
     }
+
+    public async Task<bool> IsEmptyAsync()
+    {
+        var query = "SELECT TOP 1 * FROM Products ";
+
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            await connection.OpenAsync();
+
+            using var sqlCommand = new SqlCommand(query, connection);
+            using var productsDataReader = sqlCommand.ExecuteReader();
+
+            if (productsDataReader.HasRows)
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
 }

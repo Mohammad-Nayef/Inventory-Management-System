@@ -16,8 +16,7 @@ public class InventoryService
 
     public async Task<bool> IsEmptyAsync()
     {
-        return !(await _repository.GetAllProductsAsync())
-            .Any();
+        return await _repository.IsEmptyAsync();
     }
 
     public async Task<string> PrintAllProductsAsync()
