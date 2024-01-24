@@ -1,4 +1,4 @@
-﻿var inventory = new Inventory();
+﻿var inventory = new InventoryService(new SqlServerProductRepository());
 string? productName;
 decimal productPrice; 
 int productQuantity, menuOption;
@@ -41,49 +41,49 @@ while (true)
             var newProduct = new Product(productName, productPrice, productQuantity);
 
             if (newProduct.IsValid())
-                inventory.AddProduct(newProduct);
+                await inventory.AddProductAsync(newProduct);
             else
                 Console.WriteLine("The values can't be negative.");
 
             break;
 
         case 2:
-            Console.WriteLine(inventory.PrintAllProducts());
+            Console.WriteLine(await inventory.PrintAllProductsAsync());
             break;
 
         case 3:
             Console.Write("Name of a product to edit it: ");
             productName = Console.ReadLine();
 
-            var product = inventory.FindProduct(productName);
+            var product = await inventory.FindProductAsync(productName);
             if (product == null)
             {
                 Console.WriteLine("The product is not found.");
                 break;
             }
               
-            EditProductMenu(product);
+            await EditProductMenuAsync(product);
             break;
 
         case 4:
             Console.Write("Name of a product to delete it: ");
             productName = Console.ReadLine();
 
-            product = inventory.FindProduct(productName);
+            product = await inventory.FindProductAsync(productName);
             if (product == null)
             {
                 Console.WriteLine("The product is not found.");
                 break;
             }
               
-            inventory.DeleteProduct(product);
+            await inventory.DeleteProductAsync(product);
             break;
 
         case 5:
             Console.Write("Name of a product to search for it: ");
             productName = Console.ReadLine();
 
-            product = inventory.FindProduct(productName);
+            product = await inventory.FindProductAsync(productName);
             if (product == null)
             {
                 Console.WriteLine("The product is not found.");
@@ -103,7 +103,7 @@ while (true)
     Console.Clear();
 }
 
-void EditProductMenu(Product product)
+async Task EditProductMenuAsync(Product product)
 {
     Console.Clear();
     Console.WriteLine($"The current data of {product.Name}: ");
@@ -126,7 +126,7 @@ void EditProductMenu(Product product)
             Console.Write("Enter the new name: ");
             var newName = Console.ReadLine();
 
-            inventory.EditProductName(product, newName);
+            await inventory.EditProductNameAsync(product, newName);
             break;
 
         case 2:
@@ -138,7 +138,7 @@ void EditProductMenu(Product product)
                 return;
             }
 
-            inventory.EditProductPrice(product, newPrice);
+            await inventory.EditProductPriceAsync(product, newPrice);
             break;
 
         case 3:
@@ -150,7 +150,7 @@ void EditProductMenu(Product product)
                 break;
             }
 
-            inventory.EditProductQuantity(product, newQuantity);
+            await inventory.EditProductQuantityAsync(product, newQuantity);
             break;
 
         default:
